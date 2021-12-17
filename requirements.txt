@@ -1,0 +1,6 @@
+aiohttp>=3.7.4.post0
+nxbt>=0.1.4
+numpy>=1.21.4
+python-pushover>=0.4
+pygame>=1.9.4.post1
+Pillow>=8.4.0

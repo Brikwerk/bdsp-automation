@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Reset Hunting</title>
+	<style type="text/css">
+		html, body {
+			background-color: #FFF;
+			text-align: center;
+		}
+
+		#wrapper {
+			display: block;
+			max-width: 720px;
+			text-align: left;
+			font-family: Arial, Helvetica, sans-serif;
+			margin: auto;
+		}
+
+		#video-canvas {
+			max-width: 720;
+			width: 100%;
+		}
+
+		#counters {
+			display: block;
+			text-align: center;
+		}
+
+		.counter-block {
+			display: inline-block;
+			padding-left: 1rem;
+			padding-right: 1rem;
+		}
+
+		.text-center {
+			text-align: center;
+		}
+
+		.counter {
+			font-size: 2rem;
+		}
+
+		#odds {
+			font-size: 1.5rem;
+		}
+
+		#log {
+			max-height: 200px;
+			overflow: scroll;
+			margin: auto;
+			background-color: #2a2b2e;
+			color: #E5E5E5;
+			font-family: Menlo, Consolas, monospace;
+			padding: 1rem;
+			text-align: left;
+		}
+	</style>
+	
+</head>
+<body>
+	<div id="wrapper">
+		<canvas id="video-canvas"></canvas>
+		
+		<section id="counters">
+			<div class="counter-block">
+				<h2 class="counter-header text-center">Reset Counter</h2>
+				<div id="reset-counter" class="counter text-center">0</div>
+			</div>
+			<div class="counter-block">
+				<h2 class="counter-header text-center">Issue Counter</h2>
+				<div id="issue-counter" class="counter text-center">0</div>
+			</div>
+		</section>
+
+		<h2 id="odds-header" class="text-center">Odds</h2>
+		<div id="odds" class="text-center">0.00%</div>
+
+		<h2>Log</h2>
+		<div id="log"></div>
+	</div>
+	<script type="text/javascript" src="/static/jsmpeg.min.js"></script>
+	<script type="text/javascript">
+		var canvas = document.getElementById('video-canvas');
+		var url = 'ws://'+document.location.host+'/video';
+		var player = new JSMpeg.Player(url, {canvas: canvas});
+	</script>
+	<script>
+		function getStats() {
+			fetch('http://'+document.location.host+'/stats', {
+				method: 'GET'
+			})
+			.then(function(resp) { return resp.json(); })
+			.then(function(json) {
+				let resetCounter = document.getElementById("reset-counter");
+				resetCounter.innerHTML = json['reset_count'];
+
+				let issuesElm = document.getElementById("issue-counter");
+				issuesElm.innerHTML = json['issues']
+
+				let oddsElm = document.getElementById("odds");
+				if (Number.isInteger(json['reset_count']) && json['reset_count'] > 0) {
+					let odds = 1 - Math.pow((1-(1/4096)), json['reset_count'])
+					oddsElm.innerHTML = (100 * odds).toFixed(5) + "%";
+				}
+
+				let logElm = document.getElementById("log");
+				let log = json['log'].reverse();
+
+				let logStr = "";
+				for (let i = 0; i < log.length; i++) {
+					logStr = logStr + log[i] + "<br>";
+				}
+
+				logElm.innerHTML = logStr;
+			});
+		}
+		setInterval(getStats, 1000);
+	</script>
+</body>
+</html>
