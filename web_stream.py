@@ -52,16 +52,15 @@ async def handle_video(req):
 
     print("Client connected")
 
-    while True:
-        try:
-            print(await ws_current.receive())
-        except RuntimeError as e:
-            print(e)
-            break
+    try:
+        while not ws_current.closed:
+            await ws_current.receive()
+    except RuntimeError as e:
+        print(e)
+    finally:
+        del req.app['websockets'][name]
     
-    print("Client Disconnected")
-
-    del req.app['websockets'][name]
+    print("Client disconnected")
 
 
 @routes.get('/stats')
