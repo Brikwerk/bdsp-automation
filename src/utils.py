@@ -6,18 +6,27 @@ import numpy as np
 from pygame.surfarray import array3d
 import pygame.camera
 from nxbt.nxbt import Buttons
+from skimage.transform import resize
 
 
 pygame.camera.init()
 # cam = pygame.camera.Camera(pygame.camera.list_cameras()[0])
-cam = pygame.camera.Camera("/dev/video2", (640,480))
+cam = pygame.camera.Camera("/dev/video2", (720,480))
 cam.start()
 
 
-def get_image():
+def get_image(resize=True, resize_width=720, resize_height=480):
     image = cam.get_image()
     image = array3d(image).swapaxes(0,1)
-    return np.array(image)
+    image = np.array(image)
+
+    # Resize image if option is true and
+    # resize width/height don't match image dimensions
+    if resize and (resize_width != image.shape[1] or
+                   resize_height != image.shape[0]):
+        image = resize(image, (resize_height, resize_width))
+    
+    return image
 
 
 def wait_for_battle(img_fn, timeout=60, framerate=30, std_threshold=5, rgb_threshold=40):
