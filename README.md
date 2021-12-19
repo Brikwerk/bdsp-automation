@@ -87,9 +87,8 @@ sudo apt-get install v4l2loopback-dkms
 
 7. For notifications, this project leverages [Pushover](https://pushover.net). If you do not wish to use Pushover but do wish to receive notifications, feel free to edit the `src/notify.py` file to your liking. If you do wish to use Pushover, please create a `notify-keys.json` file at the root of this project and fill it with the following template:
 
+**Please fill in the template with your keys before using with any scripts.**
 ```json
-// Please fill in the template with your keys before
-// using with any scripts.
 {
     "user-key": "YOUR-USER-KEY-GOES-HERE",
     "token": "YOUR-API-TOKEN-GOES-HERE"
