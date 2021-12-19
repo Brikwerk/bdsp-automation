@@ -60,27 +60,42 @@ pip 18.1 from /usr/lib/python3/dist-packages/pip (python 3.7)
 
 If `pip3` is not available on your system, please use your package manager to install `python3-pip`.
 
-3. Use `pip3` to install the required Python packages
+3. Use `pip3` to install the required Python packages on the root account. The root account is required for proper controller emulation.
 
 ```bash
-pip3 install -r requirements.txt
+sudo pip3 install -r requirements.txt
 ```
 
 4. Install tmux through your system's package manager
 
 ```bash
-#Example for APT package manager-based systems
+# Example for APT package manager-based systems
 sudo apt-get install tmux
 ```
 
 5. Install v4l2loopback through your system's package manager
 
 ```bash
-#Example for APT package manager-based systems
+# Example for APT package manager-based systems
 sudo apt-get install v4l2loopback-dkms
 ```
 
 6. Configure your Switch with the following settings
     - The Dark Theme should be selected as your system theme.
     - The Switch's dock output resolution should be set to 480p. This helps with transcoding and streaming on low-end hardware. This setting is located in System Settings > TV Settings > TV Resolution
-    - (Optional) If the script you plan to run does not require internet access and likely will run for a prolonged period of time, you should disconnect your Switch from the internet. This prevents updates prompts, which can derail automation.
+    - (Optional) If the script you plan to run does not require internet access and likely will run for a prolonged period of time, you should disconnect your Switch from the internet. This prevents update prompts, which can derail automation.
+
+7. For notifications, this project leverages [Pushover](https://pushover.net). If you do not wish to use Pushover but do wish to receive notifications, feel free to edit the `src/notify.py` file to your liking. If you do wish to use Pushover, please create a `notify-keys.json` file at the root of this project and fill it with the following template:
+
+```json
+// Please fill in the template with your keys before
+// using with any scripts.
+{
+    "user-key": "YOUR-USER-KEY-GOES-HERE",
+    "token": "YOUR-API-TOKEN-GOES-HERE"
+}
+```
+
+## Running Automation Scripts
+
+Please see the guides located in the [docs](/docs) folder for situation-specific automation scripts.
